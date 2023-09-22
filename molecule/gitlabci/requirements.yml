@@ -2,3 +2,47 @@
 - name: "labocbz.prepare_host"
   src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Prepare-Host.git"
   version: "1.0"
+
+- name: "labocbz.install_byobu"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Byobu.git"
+  version: "1.1"
+
+- name: "labocbz.install_fail2ban"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Fail2ban.git"
+  version: "1.0"
+
+- name: "labocbz.install_filebeat"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Filebeat.git"
+  version: "1.0"
+
+- name: "labocbz.install_lynis"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Lynis.git"
+  version: "1.0"
+
+- name: "labocbz.install_portsentry"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Portsentry.git"
+  version: "1.0"
+
+- name: "labocbz.install_postfix"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Postfix.git"
+  version: "1.0"
+
+- name: "labocbz.install_rsyslog"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Rsyslog.git"
+  version: "1.0"
+
+- name: "labocbz.install_ssh"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-SSH.git"
+  version: "1.0"
+
+- name: "labocbz.install_unattended_upgrades"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-UnattendedUpgrades.git"
+  version: "1.0"
+
+- name: "labocbz.add_logrotate_confs"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Add-Logrotate-Confs.git"
+  version: "1.0"
+
+- name: "labocbz.install_node_exporter"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Node-Exporter.git"
+  version: "1.0"
