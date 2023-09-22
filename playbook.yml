@@ -9,3 +9,159 @@
   become_user: root
 
   tasks:
+
+    - name: "Include labocbz.prepare_host"
+      tags:
+        - "labocbz.prepare_host"
+      ansible.builtin.include_role:
+        name: "labocbz.prepare_host"
+
+    - name: "Include labocbz.add_certificates"
+      tags:
+        - "labocbz.add_certificates"
+      loop: "{{ inv_ca_cert_bundles }}"
+      loop_control:
+        loop_var: bundle
+      when: inv_ca_cert_bundles is defined
+      vars:
+        add_certificates_bundle_name: "{{ bundle.name }}"
+        add_certificates_bundle_type: "{{ bundle.type }}"
+        add_certificates_bundle_src: "{{ bundle.src }}"
+        add_certificates_bundle_dest: "{{ bundle.dest }}"
+        add_certificates_bundle_src_user: "{{ bundle.src_user }}"
+        add_certificates_bundle_src_password: "{{ bundle.src_password }}"
+        add_certificates_bundle_dest_user: "{{ bundle.dest_user }}"
+        add_certificates_bundle_dest_group: "{{ bundle.dest_group }}"
+        add_certificates_bundle_dest_mode: "{{ bundle.dest_mode }}"
+      ansible.builtin.include_role:
+        name: "labocbz.add_certificates"
+
+    - name: "Include labocbz.install_ssh"
+      tags:
+        - "labocbz.install_ssh"
+      vars:
+        ssh_port: "{{ inv_ssh_port }}"
+        ssh_administration_name: "{{ inv_ssh_administration_name }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_ssh"
+
+    - name: "Include labocbz.install_fail2ban"
+      tags:
+      - "labocbz.install_fail2ban"
+      vars:
+        fail2ban_report_email_address: "{{ inv_fail2ban_report_email_address }}"
+        fail2ban_ssh_port: "{{ inv_fail2ban_ssh_port }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_fail2ban"
+
+    - name: "Include labocbz.install_unattended_upgrades"
+      tags:
+      - "labocbz.install_unattended_upgrades"
+      vars:
+        install_unattended_upgrades_automatic_reboot: "{{ inv_install_unattended_upgrades_automatic_reboot }}"
+        install_unattended_upgrades_automatic_reboot_time: "{{ inv_install_unattended_upgrades_automatic_reboot_time }}"
+        install_unattended_upgrades_report_email_address: "{{ inv_install_unattended_upgrades_report_email_address }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_unattended_upgrades"
+
+    - name: "Include labocbz.install_rsyslog"
+      tags:
+        - "labocbz.install_rsyslog"
+      ansible.builtin.include_role:
+        name: "labocbz.install_rsyslog"
+
+    - name: "Include labocbz.install_byobu"
+      tags:
+        - "labocbz.install_byobu"
+      ansible.builtin.include_role:
+        name: "labocbz.install_byobu"
+
+    - name: "Include labocbz.install_postfix"
+      tags:
+        - "labocbz.install_postfix"
+      vars:
+        postfix_email_sender: "{{ inv_postfix_email_sender }}"
+        postfix_email_sender_address: "{{ inv_postfix_email_sender_address }}"
+        postfix_email_sender_api_key: "{{ inv_postfix_email_sender_api_key }}"
+        postfix_aliases_addresses: "{{ inv_postfix_aliases_addresses }}"
+        postfix_esmtp_banner: "{{ inv_postfix_esmtp_banner }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_postfix"
+
+    - name: "Include labocbz.install_portsentry"
+      tags:
+        - "labocbz.install_portsentry"
+      vars:
+        portsentry_base_addresses: "{{ inv_portsentry_base_addresses }}"
+        portsentry_ignore_addresses: "{{ inv_portsentry_ignore_addresses }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_portsentry"
+
+    - name: "Include labocbz.install_rkhunter"
+      tags:
+        - "labocbz.install_rkhunter"
+      vars:
+        rkhunter_create_cron_job: "{{ inv_rkhunter_create_cron_job }}"
+        rkhunter_cron_job_weekday: "{{ inv_rkhunter_create_cron_job }}"
+        rkhunter_cron_job_minute: "{{ inv_rkhunter_cron_job_minute }}"
+        rkhunter_cron_job_hour: "{{ inv_rkhunter_cron_job_hour }}"
+        rkhunter_report_email_address: "{{ inv_rkhunter_create_cron_job }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_rkhunter"
+
+    - name: "Include labocbz.install_lynis"
+      tags:
+        - "labocbz.install_lynis"
+      vars:
+        lynis_create_cron_job: "{{ inv_lynis_create_cron_job }}"
+        lynis_cron_job_weekday: "{{ inv_lynis_create_cron_job }}"
+        lynis_cron_job_minute: "{{ inv_lynis_cron_job_minute }}"
+        lynis_cron_job_hour: "{{ inv_lynis_cron_job_hour }}"
+        lynis_report_email_address: "{{ inv_lynis_create_cron_job }}"
+        lynis_install_path: "{{ inv_lynis_install_path }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_lynis"
+
+    - name: "Include labocbz.add_certificates"
+      tags:
+        - "labocbz.add_certificates"
+      loop: "{{ inv_install_node_exporter_certs }}"
+      loop_control:
+        loop_var: bundle
+      when: inv_install_node_exporter_certs is defined
+      vars:
+        add_certificates_bundle_name: "{{ bundle.name }}"
+        add_certificates_bundle_type: "{{ bundle.type }}"
+        add_certificates_bundle_src: "{{ bundle.src }}"
+        add_certificates_bundle_dest: "{{ bundle.dest }}"
+        add_certificates_bundle_src_user: "{{ bundle.src_user }}"
+        add_certificates_bundle_src_password: "{{ bundle.src_password }}"
+        add_certificates_bundle_dest_user: "{{ bundle.dest_user }}"
+        add_certificates_bundle_dest_group: "{{ bundle.dest_group }}"
+        add_certificates_bundle_dest_mode: "{{ bundle.dest_mode }}"
+      ansible.builtin.include_role:
+        name: "labocbz.add_certificates"
+
+    - name: "Include labocbz.install_node_exporter"
+      tags:
+        - "labocbz.install_node_exporter"
+      vars:
+        install_node_exporter_install_path: "{{ inv_install_node_exporter_install_path }}"
+        install_node_exporter_lib_path: "{{ inv_install_node_exporter_lib_path }}"
+        install_node_exporter_web_ssl_path: "{{ inv_install_node_exporter_web_ssl_path }}"
+        install_node_exporter_web_config_file: "{{ inv_install_node_exporter_web_config_file }}"
+        install_node_exporter_loglevel: "{{ inv_install_node_exporter_loglevel }}"
+        install_node_exporter_version: "{{ inv_install_node_exporter_version }}"
+        install_node_exporter_architecture: "{{ inv_install_node_exporter_architecture }}"
+        install_node_exporter_ssl: "{{ inv_install_node_exporter_ssl }}"
+        install_node_exporter_ssl_key: "{{ inv_install_node_exporter_ssl_key }}"
+        install_node_exporter_ssl_crt: "{{ inv_install_node_exporter_ssl_crt }}"
+        install_node_exporter_port: "{{ inv_install_node_exporter_port }}"
+        install_node_exporter_stats_exports: "{{ inv_install_node_exporter_stats_exports }}"
+        install_node_exporter_basic_auth: "{{ inv_install_node_exporter_basic_auth }}"
+        install_node_exporter_basic_auth_login: "{{ inv_install_node_exporter_basic_auth_login }}"
+        install_node_exporter_basic_auth_password_hash: "{{ inv_install_node_exporter_basic_auth_password_hash }}"
+        install_node_exporter_user: "{{ inv_install_node_exporter_user }}"
+        install_node_exporter_group: "{{ inv_install_node_exporter_group }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_node_exporter"

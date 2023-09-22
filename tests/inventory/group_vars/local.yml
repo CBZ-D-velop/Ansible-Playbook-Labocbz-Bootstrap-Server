@@ -1,1 +1,114 @@
 ---
+inv_ca_cert_bundles:
+  - name: "My-Local-Ansible-Root-CA.pem.crt"
+    type: "CA"
+    src: "/tmp/My-Local-Ansible-Root-CA.pem.crt"
+    #src_user: "myUser"
+    #src_password: "secretPassword"
+    #dest_user: "root"
+    #dest_group: "root"
+    #dest_mode: "0755"
+  - name: "My-Local-Ansible-Intermediate-CA-1.pem.crt"
+    type: "CA"
+    src: "/tmp/My-Local-Ansible-Intermediate-CA-1.pem.crt"
+    #src_user: "myUser"
+    #src_password: "secretPassword"
+    #dest_user: "root"
+    #dest_group: "root"
+    #dest_mode: "0755"
+  - name: "My-Local-Ansible-Intermediate-CA-1.pem.crt"
+    type: "CA"
+    src: "/tmp/My-Local-Ansible-Intermediate-CA-1.pem.crt"
+    #src_user: "myUser"
+    #src_password: "secretPassword"
+    #dest_user: "root"
+    #dest_group: "root"
+    #dest_mode: "0755"
+
+inv_fail2ban_report_email_address: "address@your.domain.tld"
+inv_fail2ban_ssh_port: 23
+
+inv_ssh_administration_name: "My Compagny"
+inv_ssh_port: 23
+
+inv_install_unattended_upgrades_automatic_reboot: false
+inv_install_unattended_upgrades_automatic_reboot_time: "06:00"
+inv_install_unattended_upgrades_report_email_address: "my.address@domain.tld"
+
+inv_rkhunter_create_cron_job: true
+inv_rkhunter_cron_job_weekday: "*"
+inv_rkhunter_cron_job_minute: "6"
+inv_rkhunter_cron_job_hour: "6"
+inv_rkhunter_report_email_address: "your.address@domain.tld"
+
+inv_postfix_email_sender: true
+inv_postfix_email_sender_address: "in-v3.my.provider.com"
+inv_postfix_email_sender_api_key: "MY_API_KEY_TO_SEND_EMAILS"
+inv_postfix_esmtp_banner: "ESMTP my Compagny"
+inv_postfix_aliases_addresses:
+  - alias: "root"
+    address: "my.root.address@domain.tld"
+  - alias: "hostmaster"
+    address: "my.hostmaster.address@domain.tld"
+  - alias: "postmaster"
+    address: "my.postmaster.address@domain.tld"
+  - alias: "webmaster"
+    address: "my.webmaster.address@domain.tld"
+  - alias: "www"
+    address: "my.www.address@domain.tld"
+
+inv_portsentry_base_addresses:
+  - "127.0.0.1/32"
+  - "0.0.0.0"
+inv_portsentry_ignore_addresses:
+  - "192.168.1.1/24"
+  - "192.168.1.2/24"
+  - "192.168.1.3/24"
+  - "192.168.1.4/24"
+
+inv_lynis_create_cron_job: true
+inv_lynis_cron_job_weekday: "*"
+inv_lynis_cron_job_minute: "6"
+inv_lynis_cron_job_hour: "6"
+inv_lynis_report_email_address: "your.address@domain.tld"
+inv_lynis_install_path: "/usr/local/lynis"
+
+inv_install_node_exporter_install_path: "/etc/node_exporter"
+inv_install_node_exporter_lib_path: "/usr/local/node_exporter"
+inv_install_node_exporter_web_ssl_path:  "{{ inv_install_node_exporter_install_path }}/ssl"
+inv_install_node_exporter_web_config_file: "{{ inv_install_node_exporter_install_path }}/web-config.yml"
+inv_install_node_exporter_loglevel: "debug"
+inv_install_node_exporter_version: "1.6.1"
+inv_install_node_exporter_architecture: "amd64"
+inv_install_node_exporter_ssl: true
+inv_install_node_exporter_ssl_key: "{{ inv_install_node_exporter_web_ssl_path }}/{{ inventory_hostname }}/{{ inventory_hostname }}.pem.key"
+inv_install_node_exporter_ssl_crt: "{{ inv_install_node_exporter_web_ssl_path }}/{{ inventory_hostname }}/{{ inventory_hostname }}.pem.crt"
+inv_install_node_exporter_port: 9100
+inv_install_node_exporter_stats_exports:
+  - "cpu" #Exposes CPU statistics
+  - "cpufreq" #Exposes CPU frequency statistics
+  - "diskstats" #Exposes disk I/O statistics.
+  - "filesystem" #Exposes filesystem statistics, such as disk space used.
+  - "loadavg" #Exposes load average.
+  - "meminfo" #Exposes memory statistics.
+  - "netdev" #Exposes network interface statistics such as bytes transferred.
+  - "processes" #Exposes aggregate process statistics from /proc.
+  - "netstat" #Exposes network statistics from /proc/net/netstat. This is the same information as netstat -s.
+  - "mountstats" #Exposes filesystem statistics from /proc/self/mountstats. Exposes detailed NFS client statistics.
+  - "systemd" #Exposes service and system status from systemd.
+inv_install_node_exporter_basic_auth: true
+inv_install_node_exporter_basic_auth_login: "admin"
+inv_install_node_exporter_basic_auth_password: "admin" #for test
+inv_install_node_exporter_basic_auth_password_hash: "$2a$10$0M5Kx/KYWNIExB1AfP0wDuMT6hGkkNOcxLtLRWV6nfSZWfonGb69W"
+inv_install_node_exporter_user: "root"
+inv_install_node_exporter_group: "root"
+inv_install_node_exporter_certs:
+  - name: "{{ inventory_hostname }}"
+    type: "cert"
+    src: "/tmp/{{ inventory_hostname }}.zip"
+    dest: "{{ inv_install_node_exporter_web_ssl_path }}"
+    #src_user: "myUser"
+    #src_password: "secretPassword"
+    dest_user: "root"
+    dest_group: "root"
+    dest_mode: "0700"

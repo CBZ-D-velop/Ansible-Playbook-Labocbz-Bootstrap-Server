@@ -3,9 +3,13 @@
   src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Prepare-Host.git"
   version: "1.0"
 
+- name: "labocbz.add_certificates"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Add-Certificates.git"
+  version: "2.0"
+
 - name: "labocbz.install_byobu"
   src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Byobu.git"
-  version: "1.1"
+  version: "1.2"
 
 - name: "labocbz.install_fail2ban"
   src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Fail2ban.git"
@@ -45,4 +49,8 @@
 
 - name: "labocbz.install_node_exporter"
   src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Node-Exporter.git"
+  version: "1.0"
+
+- name: "labocbz.install_rkhunter"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Rkhunter.git"
   version: "1.0"
