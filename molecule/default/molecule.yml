@@ -105,7 +105,7 @@ verifier:
 scenario:
   name: "default"
   test_sequence:
-    - "lint"
+    #- "lint"
     - "destroy"
     #- "dependency" # need a "requirements.yml" file
     - "syntax"

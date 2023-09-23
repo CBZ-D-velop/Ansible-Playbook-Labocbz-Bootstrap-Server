@@ -11,10 +11,29 @@
 ## Description
 
 ![Tag: UNIX](https://img.shields.io/badge/Tech-UNIX-orange)
+![Tag: Debian](https://img.shields.io/badge/Tech-Debian-orange)
+![Tag: Ubuntu](https://img.shields.io/badge/Tech-Ubuntu-orange)
+![Tag: Boilerplate](https://img.shields.io/badge/Tech-Boilerplate-orange)
+![Tag: Bootstrap](https://img.shields.io/badge/Tech-Bootstrap-orange)
+![Tag: SSL/TLS](https://img.shields.io/badge/Tech-SSL%2FTLS-orange)
+![Tag: Byobu](https://img.shields.io/badge/Tech-Byobu-orange)
+![Tag: Fail2ban](https://img.shields.io/badge/Tech-Fail2ban-orange)
+![Tag: Filebeat](https://img.shields.io/badge/Tech-Filebeat-orange)
+![Tag: Lynis](https://img.shields.io/badge/Tech-Lynis-orange)
+![Tag: Portsentry](https://img.shields.io/badge/Tech-Portsentry-orange)
+![Tag: Postfix](https://img.shields.io/badge/Tech-Postfix-orange)
+![Tag: Rsyslog](https://img.shields.io/badge/Tech-Rsyslog-orange)
+![Tag: Unattended-Upgrades](https://img.shields.io/badge/Tech-Unattended--Upgrades-orange)
+![Tag: Logrotate](https://img.shields.io/badge/Tech-Logrotate-orange)
+![Tag: Rkhunter](https://img.shields.io/badge/Tech-Rkhunter-orange)
+![Tag: Logwtach](https://img.shields.io/badge/Tech-Logwtach-orange)
+![Tag: Node Exporter](https://img.shields.io/badge/Tech-Node--Exporter-orange)
 
-This is a limited description for the meta.
+An Ansible playbook to bootstrap and configure a server based on Debian/Ubuntu.
 
 ## Deployment diagramm
+
+Deployment diagram is not applicable for this case.
 
 ## Tests and simulations
 
@@ -95,3 +114,18 @@ Here you can put your change to keep a trace of your work and decisions.
 
 * [Ansible playbook documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_playbooks.html)
 * [Ansible Molecule documentation](https://molecule.readthedocs.io/)
+* [labocbz.prepare_host](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Prepare-Host.git)
+* [labocbz.add_certificates](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Add-Certificates.git)
+* [labocbz.install_byobu](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Byobu.git)
+* [labocbz.install_fail2ban](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Fail2ban.git)
+* [labocbz.install_filebeat](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Filebeat.git)
+* [labocbz.install_lynis](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Lynis.git)
+* [labocbz.install_portsentry](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Portsentry.git)
+* [labocbz.install_postfix](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Postfix.git)
+* [labocbz.install_rsyslog](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Rsyslog.git)
+* [labocbz.install_ssh](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-SSH.git)
+* [labocbz.install_unattended_upgrades](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-UnattendedUpgrades.git)
+* [labocbz.add_logrotate_confs](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Add-Logrotate-Confs.git)
+* [labocbz.install_node_exporter](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Node-Exporter.git)
+* [labocbz.install_rkhunter](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Rkhunter.git)
+* [labocbz.install_logwtach](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Logwtach.git)

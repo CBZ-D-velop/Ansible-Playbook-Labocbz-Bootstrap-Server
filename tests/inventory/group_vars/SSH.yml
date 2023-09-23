@@ -1,0 +1,7 @@
+---
+
+inv_ssh_administration_name: "My Compagny"
+inv_ssh_port: "{{ ansible_ssh_port }}"
+inv_ssh_allowed_groups:
+  - "root"
+  - "remoteAccess"
