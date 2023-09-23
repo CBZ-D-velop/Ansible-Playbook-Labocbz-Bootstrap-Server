@@ -31,6 +31,14 @@
 
 An Ansible playbook to bootstrap and configure a server based on Debian/Ubuntu.
 
+This Ansible playbook is an essential tool for automating and industrializing the deployment of servers and virtual machines. It relies on roles defined elsewhere in the documentation to simplify the process of bootstrapping, installing, configuring, and deploying a set of tools.
+
+The approach of this playbook is based on organizing servers into groups, where each server must belong to one or more groups to be considered a target for tool installation and configuration. For example, by using the expression {{ tower_env | default([]) }}:&LOGWATCH, all servers that are part of the tower_env group and also present in the LOGWATCH group will automatically be equipped with the Logwatch tool, with consistent installation and configuration.
+
+The primary goal of this playbook is to streamline and accelerate the setup of servers and virtual machines, ensuring uniformity in configuration and automating many tasks. This approach saves valuable time and reduces human errors when deploying complex IT infrastructures.
+
+By using Ansible with this playbook and its associated roles, system administrators can deploy uniform and reliable architectures more quickly, contributing to more efficient management of the entire infrastructure.
+
 ## Deployment diagramm
 
 Deployment diagram is not applicable for this case.
@@ -89,13 +97,14 @@ To install this playbook, just copy/import this playbook or raw file into your f
 ```YAML
 # From inventory
 ---
-all vars from to put/from your inventory
+# all vars from to put/from your inventory and groups,
+# see tests/inventory/group_var for all groups and vars.
 ```
 
 ```YAML
 # From AWX / Tower
 ---
-all vars from to put/from AWX / Tower
+tower_env: "local"
 ```
 
 ## Architectural Decisions Records
@@ -105,6 +114,9 @@ Here you can put your change to keep a trace of your work and decisions.
 ### 2023-09-22: First Init
 
 * First init of this playbook with the bootstrap_playbook playbook by Lord Robin Crombez
+* Playbook use all roles defined in se Sources section
+* Playbook use a env target + group target to deploy on specific hosts and group
+* Change can be done, maybe put all in inside play, but for my point of view, its better to be able to assign any host in any group
 
 ## Authors
 
