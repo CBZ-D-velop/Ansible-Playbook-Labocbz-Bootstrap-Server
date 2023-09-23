@@ -1,4 +1,4 @@
-# Ansible playbook: tool.bootstrap_server
+# Ansible playbook: labocbz.bootstrap_server
 
 ![Licence Status](https://img.shields.io/badge/licence-MIT-brightgreen)
 ![CI Status](https://img.shields.io/badge/CI-success-brightgreen)
