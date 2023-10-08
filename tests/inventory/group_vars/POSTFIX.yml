@@ -15,4 +15,3 @@ inv_postfix_aliases_addresses:
     address: "my.webmaster.address@domain.tld"
   - alias: "www"
     address: "my.www.address@domain.tld"
-
