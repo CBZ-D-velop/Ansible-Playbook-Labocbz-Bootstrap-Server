@@ -12,7 +12,7 @@
       tags:
         - "labocbz.prepare_host"
       ansible.builtin.include_role:
-        name: "../../roles/labocbz.prepare_host"
+        name: "labocbz.prepare_host"
 
     - name: "Gather facts from all hosts"
       delegate_to: "{{ item }}"
