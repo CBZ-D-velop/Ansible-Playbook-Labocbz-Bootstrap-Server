@@ -65,6 +65,7 @@
         mode: 0700
 
     - name: "Import cryptographic content if needed (CA)"
+      run_once: yes
       loop: "{{ inv_install_node_exporter_certs }}"
       loop_control:
         loop_var: bundle
