@@ -104,13 +104,6 @@ yaml_lint_extra_vars:
   variables:
     path: "./tests/certs/main.yml ./tests/tower/tower.yml"
 
-#############################################
-##### jinja2-lint
-#############################################
-
-jinja2_lint_templates:
-  <<: *jinja2_lint
-
 ############################################
 #### ansible-lint
 ############################################
