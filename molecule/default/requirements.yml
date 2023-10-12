@@ -9,7 +9,7 @@
 
 - name: "labocbz.install_byobu"
   src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Byobu.git"
-  version: "1.2"
+  version: "2.0"
 
 - name: "labocbz.install_fail2ban"
   src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Fail2ban.git"
