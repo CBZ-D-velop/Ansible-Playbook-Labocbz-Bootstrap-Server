@@ -9,6 +9,7 @@
 stages:
 - gitlab-test
 - yaml-lint
+- jinja2-lint
 - ansible-lint
 - molecule-test
 
@@ -31,6 +32,21 @@ variables:
     - "chmod o-w ."
   script:
     - yamllint -c ./.yamllint $path # Here mains files
+  allow_failure: false
+  retry: 2
+
+# Then we need to lint on role's files with a JINJA2 vision
+# Because if one of the templates files doesn't respect JINJA2 conventions,
+# we dont need to test rest of the pipeline
+.jinja2_lint: &jinja2_lint
+  stage: jinja2-lint
+  image: $NEXUS_ADDRESS/$DOCKER_IMAGE_JINJA_LINT
+  before_script:
+    # Fix weird ansible bug: https://github.com/trailofbits/algo/issues/1637
+    # This probably happens due to gitlab-runner mounting the git repo into the container
+    - "chmod o-w ."
+  script:
+    - "j2lint ./templates/*.j2 --ignore S3 S7"
   allow_failure: false
   retry: 2
 
@@ -84,10 +100,10 @@ include:
 #### yaml-lint
 ############################################
 
-yaml_lint_playbook:
+yaml_lint_role:
   <<: *yaml_lint
   variables:
-    path: "./*.yml"
+    path: "./*/*.yml"
 
 yaml_lint_molecule:
   <<: *yaml_lint
@@ -104,6 +120,13 @@ yaml_lint_extra_vars:
   variables:
     path: "./tests/certs/main.yml ./tests/tower/tower.yml"
 
+#############################################
+##### jinja2-lint
+#############################################
+
+jinja2_lint_templates:
+  <<: *jinja2_lint
+
 ############################################
 #### ansible-lint
 ############################################
@@ -111,10 +134,11 @@ yaml_lint_extra_vars:
 ansible_lint:
   <<: *ansible_lint
   needs:
-    - "yaml_lint_playbook"
+    - "yaml_lint_role"
     - "yaml_lint_molecule"
     - "yaml_lint_inventories"
     - "yaml_lint_extra_vars"
+    - "jinja2_lint_templates"
 
 ############################################
 #### moelcule test

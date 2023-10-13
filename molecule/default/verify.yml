@@ -2,7 +2,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify Rsyslog / Logrotate"
-  hosts: "{{ tower_env | default([]) }}:&all"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: false
   tasks:
 
@@ -42,7 +42,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify BYOBU"
-  hosts: "{{ tower_env | default([]) }}:&BYOBU"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   tasks:
 
@@ -142,7 +142,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify LYNIS"
-  hosts: "{{ tower_env | default([]) }}:&LYNIS"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: false
   tasks:
 
@@ -176,7 +176,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify PORTSENTRY"
-  hosts: "{{ tower_env | default([]) }}:&PORTSENTRY"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: false
   tasks:
 
@@ -201,7 +201,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify POSTFIX"
-  hosts: "{{ tower_env | default([]) }}:&POSTFIX"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: false
   tasks:
 
@@ -240,7 +240,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify RKHUNTER"
-  hosts: "{{ tower_env | default([]) }}:&RKHUNTER"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: false
   tasks:
 
@@ -274,7 +274,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify SSH"
-  hosts: "{{ tower_env | default([]) }}:&SSH"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: false
   tasks:
 
@@ -305,7 +305,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify UNATTENDED_UPGRADES"
-  hosts: "{{ tower_env | default([]) }}:&UNATTENDED_UPGRADES"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: false
   tasks:
 
@@ -323,7 +323,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify LOGWATCH"
-  hosts: "{{ tower_env | default([]) }}:&LOGWATCH"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: false
   tasks:
 
@@ -355,7 +355,7 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify NODE_EXPORTER"
-  hosts: "{{ tower_env | default([]) }}:&NODE_EXPORTER"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: false
   tasks:
 

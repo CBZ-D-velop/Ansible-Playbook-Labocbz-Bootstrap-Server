@@ -1,6 +1,6 @@
 ---
 - name: "Prepare hosts, deploy CAs, install Rsyslog"
-  hosts: "{{ tower_env | default([]) }}:&all"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -49,7 +49,7 @@
         name: "labocbz.add_logrotate_confs"
 
 - name: "Install and configure: SSH"
-  hosts: "{{ tower_env | default([]) }}:&SSH"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -68,7 +68,7 @@
         name: "labocbz.install_ssh"
 
 - name: "Install and configure: Fail2Ban"
-  hosts: "{{ tower_env | default([]) }}:&FAIL2BAN"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -86,7 +86,7 @@
         name: "labocbz.install_fail2ban"
 
 - name: "Install and configure: UNATTENDED_UPGRADES"
-  hosts: "{{ tower_env | default([]) }}:&UNATTENDED_UPGRADES"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -105,7 +105,7 @@
         name: "labocbz.install_unattended_upgrades"
 
 - name: "Install and configure: Byobu"
-  hosts: "{{ tower_env | default([]) }}:&BYOBU"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -124,7 +124,7 @@
         name: "labocbz.install_byobu"
 
 - name: "Install and configure: Postfix"
-  hosts: "{{ tower_env | default([]) }}:&POSTFIX"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -145,7 +145,7 @@
         name: "labocbz.install_postfix"
 
 - name: "Install and configure: Portsentry"
-  hosts: "{{ tower_env | default([]) }}:&PORTSENTRY"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -163,7 +163,7 @@
         name: "labocbz.install_portsentry"
 
 - name: "Install and configure: Rkhunter"
-  hosts: "{{ tower_env | default([]) }}:&RKHUNTER"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -184,7 +184,7 @@
         name: "labocbz.install_rkhunter"
 
 - name: "Install and configure: Lynis"
-  hosts: "{{ tower_env | default([]) }}:&LYNIS"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -206,7 +206,7 @@
         name: "labocbz.install_lynis"
 
 - name: "Install and configure: Logwatch"
-  hosts: "{{ tower_env | default([]) }}:&LOGWATCH"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
@@ -228,7 +228,7 @@
         name: "labocbz.install_logwatch"
 
 - name: "Install and configure: Node Exporter"
-  hosts: "{{ tower_env | default([]) }}:&NODE_EXPORTER"
+  hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
   strategy: free
   become: true
