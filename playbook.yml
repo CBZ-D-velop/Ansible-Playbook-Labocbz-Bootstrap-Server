@@ -2,7 +2,6 @@
 - name: "Prepare hosts, deploy CAs, install Rsyslog"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -51,7 +50,6 @@
 - name: "Install and configure: SSH"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -70,7 +68,6 @@
 - name: "Install and configure: Fail2Ban"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -88,7 +85,6 @@
 - name: "Install and configure: UNATTENDED_UPGRADES"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -107,7 +103,6 @@
 - name: "Install and configure: Byobu"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -126,7 +121,6 @@
 - name: "Install and configure: Postfix"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -147,7 +141,6 @@
 - name: "Install and configure: Portsentry"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -165,7 +158,6 @@
 - name: "Install and configure: Rkhunter"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -186,7 +178,6 @@
 - name: "Install and configure: Lynis"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -208,7 +199,6 @@
 - name: "Install and configure: Logwatch"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
@@ -230,7 +220,6 @@
 - name: "Install and configure: Node Exporter"
   hosts: "{{ tower_env | default([]) }}"
   gather_facts: true
-  strategy: free
   become: true
   become_method: sudo
   become_user: root
