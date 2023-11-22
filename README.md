@@ -18,7 +18,6 @@
 ![Tag: SSL/TLS](https://img.shields.io/badge/Tech-SSL%2FTLS-orange)
 ![Tag: Byobu](https://img.shields.io/badge/Tech-Byobu-orange)
 ![Tag: Fail2ban](https://img.shields.io/badge/Tech-Fail2ban-orange)
-![Tag: Filebeat](https://img.shields.io/badge/Tech-Filebeat-orange)
 ![Tag: Lynis](https://img.shields.io/badge/Tech-Lynis-orange)
 ![Tag: Portsentry](https://img.shields.io/badge/Tech-Portsentry-orange)
 ![Tag: Postfix](https://img.shields.io/badge/Tech-Postfix-orange)
