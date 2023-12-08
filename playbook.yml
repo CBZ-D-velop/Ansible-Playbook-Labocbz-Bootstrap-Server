@@ -268,3 +268,11 @@
         install_node_exporter_group: "{{ inv_install_node_exporter_group }}"
       ansible.builtin.include_role:
         name: "labocbz.install_node_exporter"
+
+    - name: "Include labocbz.add_logrotate_confs"
+      tags:
+        - "labocbz.add_logrotate_confs"
+      vars:
+        logrotate_configurations: "{{ inv_install_node_exporter_logrotate_configurations }}"
+      ansible.builtin.include_role:
+        name: "labocbz.add_logrotate_confs"
