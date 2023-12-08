@@ -39,3 +39,6 @@ inv_install_node_exporter_certs:
     dest_user: "root"
     dest_group: "root"
     dest_mode: "0700"
+
+inv_install_node_exporter_logrotate_configurations:
+  - "node_exporter"
