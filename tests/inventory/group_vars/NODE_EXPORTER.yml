@@ -1,5 +1,4 @@
 ---
-
 inv_install_node_exporter_install_path: "/etc/node_exporter"
 inv_install_node_exporter_lib_path: "/usr/local/node_exporter"
 inv_install_node_exporter_web_ssl_path:  "{{ inv_install_node_exporter_install_path }}/ssl"
