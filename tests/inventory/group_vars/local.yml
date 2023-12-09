@@ -33,3 +33,7 @@ inv_logrotate_configurations:
   - "dpkg"
   - "rsyslog"
   - "wtmp"
+
+inv_prepare_host_users:
+  - login: "root"
+    group: "node_exporter"
