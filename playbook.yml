@@ -11,7 +11,7 @@
       tags:
         - "labocbz.prepare_host"
       vars:
-        prepare_host_users: "{{ inv_prepare_host_users }}"
+        prepare_host_system_users: "{{ inv_prepare_host_system_users }}"
       ansible.builtin.include_role:
         name: "labocbz.prepare_host"
 
@@ -41,22 +41,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_rsyslog"
 
-    - name: "Include labocbz.add_logrotate_confs"
-      tags:
-        - "labocbz.add_logrotate_confs"
-      vars:
-        logrotate_configurations: "{{ inv_logrotate_configurations }}"
-      ansible.builtin.include_role:
-        name: "labocbz.add_logrotate_confs"
-
-- name: "Install and configure: SSH"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.install_ssh"
       tags:
         - "labocbz.install_ssh"
@@ -67,14 +51,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_ssh"
 
-- name: "Install and configure: Fail2Ban"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.install_fail2ban"
       tags:
       - "labocbz.install_fail2ban"
@@ -84,14 +60,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_fail2ban"
 
-- name: "Install and configure: UNATTENDED_UPGRADES"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.install_unattended_upgrades"
       tags:
       - "labocbz.install_unattended_upgrades"
@@ -102,14 +70,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_unattended_upgrades"
 
-- name: "Install and configure: Byobu"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.install_byobu"
       tags:
         - "labocbz.install_byobu"
@@ -120,14 +80,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_byobu"
 
-- name: "Install and configure: Postfix"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.install_postfix"
       tags:
         - "labocbz.install_postfix"
@@ -140,14 +92,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_postfix"
 
-- name: "Install and configure: Portsentry"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.install_portsentry"
       tags:
         - "labocbz.install_portsentry"
@@ -157,14 +101,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_portsentry"
 
-- name: "Install and configure: Rkhunter"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.install_rkhunter"
       tags:
         - "labocbz.install_rkhunter"
@@ -177,14 +113,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_rkhunter"
 
-- name: "Install and configure: Lynis"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.install_lynis"
       tags:
         - "labocbz.install_lynis"
@@ -198,14 +126,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_lynis"
 
-- name: "Install and configure: Logwatch"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.install_logwatch"
       tags:
         - "labocbz.install_logwatch"
@@ -219,14 +139,6 @@
       ansible.builtin.include_role:
         name: "labocbz.install_logwatch"
 
-- name: "Install and configure: Node Exporter"
-  hosts: "{{ tower_env | default([]) }}"
-  gather_facts: true
-  become: true
-  become_method: sudo
-  become_user: root
-
-  tasks:
     - name: "Include labocbz.add_certificates"
       tags:
         - "labocbz.add_certificates"
@@ -275,6 +187,6 @@
       tags:
         - "labocbz.add_logrotate_confs"
       vars:
-        logrotate_configurations: "{{ inv_install_node_exporter_logrotate_configurations }}"
+        logrotate_configurations: "{{ inv_logrotate_configurations }}"
       ansible.builtin.include_role:
         name: "labocbz.add_logrotate_confs"
