@@ -126,8 +126,13 @@ Here you can put your change to keep a trace of your work and decisions.
 
 ### 2023-12-16: System users
 
-* Role can now use system users and address groups
+* Playbook can now use system users and address groups
 * Updated with 10 years cert
+
+### 2023-12-18: Booleans
+
+* You can select your custom install with Boolean based vars
+* All var in one single inventory
 
 ## Authors
 

@@ -6,38 +6,41 @@
   gather_facts: false
   tasks:
 
-    - name: "Get Rsyslog service current state"
-      register: rsyslog_service_status
-      failed_when: not rsyslog_service_status.status.ActiveState == 'active'
-      ansible.builtin.systemd:
-        name: "rsyslog"
+    - name: "Verify Rsyslog / Logrotate"
+      when: inv_install_rsyslog | default(false)
+      block:
+        - name: "Get Rsyslog service current state"
+          register: rsyslog_service_status
+          failed_when: not rsyslog_service_status.status.ActiveState == 'active'
+          ansible.builtin.systemd:
+            name: "rsyslog"
 
-    - name: "Check Rsyslog files"
-      register: file_check
-      failed_when: not file_check.stat.exists
-      ansible.builtin.stat:
-        path: "/etc/rsyslog.conf"
+        - name: "Check Rsyslog files"
+          register: file_check
+          failed_when: not file_check.stat.exists
+          ansible.builtin.stat:
+            path: "/etc/rsyslog.conf"
 
-    - name: "Check /etc/logrotate.d directory"
-      register: logrotate_folder
-      failed_when: not logrotate_folder.stat.exists
-      ansible.builtin.stat:
-        path: "/etc/logrotate.d"
+        - name: "Check /etc/logrotate.d directory"
+          register: logrotate_folder
+          failed_when: not logrotate_folder.stat.exists
+          ansible.builtin.stat:
+            path: "/etc/logrotate.d"
 
-    - name: "Check all conf file"
-      loop: "{{ inv_logrotate_configurations }}"
-      loop_control:
-        loop_var: logrotate_file
-      register: logrotate_file_state
-      failed_when: not logrotate_file_state.stat.exists
-      ansible.builtin.stat:
-        path: "/etc/logrotate.d/{{ logrotate_file }}"
+        - name: "Check all conf file"
+          loop: "{{ inv_logrotate_configurations }}"
+          loop_control:
+            loop_var: logrotate_file
+          register: logrotate_file_state
+          failed_when: not logrotate_file_state.stat.exists
+          ansible.builtin.stat:
+            path: "/etc/logrotate.d/{{ logrotate_file }}"
 
-    - name: "Reload Logrotate and check status code"
-      register: logrotate_reload_status
-      failed_when: logrotate_reload_status.rc != 0
-      changed_when: logrotate_reload_status.rc != 0
-      ansible.builtin.shell: "logrotate /etc/logrotate.d/*"
+        - name: "Reload Logrotate and check status code"
+          register: logrotate_reload_status
+          failed_when: logrotate_reload_status.rc != 0
+          changed_when: logrotate_reload_status.rc != 0
+          ansible.builtin.shell: "logrotate /etc/logrotate.d/*"
 
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
@@ -46,98 +49,101 @@
   gather_facts: true
   tasks:
 
-    - name: "Get list of directories in /home"
-      when: inv_install_byobu_enable_byobu_for_all or inv_install_byobu_enable_neofetch_for_all
-      ansible.builtin.command: "ls /home"
-      register: home_directories
-      changed_when: home_directories.rc != 0
-
-    - name: "Check Neofetch installs"
-      when: inv_install_byobu_install_neofetch
+    - name: "Verify BYOBU"
+      when: inv_install_byobu | default(false)
       block:
-        - name: "Check Neofetch for root"
+        - name: "Get list of directories in /home"
+          when: inv_install_byobu_enable_byobu_for_all or inv_install_byobu_enable_neofetch_for_all
+          ansible.builtin.command: "ls /home"
+          register: home_directories
+          changed_when: home_directories.rc != 0
+
+        - name: "Check Neofetch installs"
+          when: inv_install_byobu_install_neofetch
           block:
-            - name: "Check Neofetch command response"
-              register: output
-              changed_when: output.rc != 0
-              failed_when: output.rc != 0
-              ansible.builtin.command: "neofetch"
+            - name: "Check Neofetch for root"
+              block:
+                - name: "Check Neofetch command response"
+                  register: output
+                  changed_when: output.rc != 0
+                  failed_when: output.rc != 0
+                  ansible.builtin.command: "neofetch"
 
-            - name: "Check Neofetch install and configuration for root"
-              register: file_check
-              failed_when: not file_check.stat.exists
-              ansible.builtin.stat:
-                path: "/root/.config/neofetch/config.conf"
+                - name: "Check Neofetch install and configuration for root"
+                  register: file_check
+                  failed_when: not file_check.stat.exists
+                  ansible.builtin.stat:
+                    path: "/root/.config/neofetch/config.conf"
 
-        - name: "Check Neofetch for all users"
-          when: inv_install_byobu_enable_neofetch_for_all and home_directories
+            - name: "Check Neofetch for all users"
+              when: inv_install_byobu_enable_neofetch_for_all and home_directories
+              block:
+                - name: "Check Neofetch command response for all users"
+                  loop: "{{ home_directories.stdout_lines }}"
+                  loop_control:
+                    loop_var: "user"
+                  when: user != 'lost+found'
+                  become: yes
+                  become_user: "{{ user }}"
+                  register: output
+                  changed_when: output.rc != 0
+                  failed_when: output.rc != 0
+                  ansible.builtin.command: "neofetch"
+
+                - name: "Check Neofetch install and configuration for all users"
+                  loop: "{{ home_directories.stdout_lines }}"
+                  loop_control:
+                    loop_var: "user"
+                  when: user != 'lost+found'
+                  become: yes
+                  become_user: "{{ user }}"
+                  register: file_check
+                  failed_when: not file_check.stat.exists
+                  ansible.builtin.stat:
+                    path: "/home/{{ user }}/.config/neofetch/config.conf"
+
+        - name: "Check Byobu installs"
           block:
-            - name: "Check Neofetch command response for all users"
-              loop: "{{ home_directories.stdout_lines }}"
-              loop_control:
-                loop_var: "user"
-              when: user != 'lost+found'
-              become: yes
-              become_user: "{{ user }}"
-              register: output
-              changed_when: output.rc != 0
-              failed_when: output.rc != 0
-              ansible.builtin.command: "neofetch"
+            - name: "Check Byobu for root"
+              block:
+                - name: "Check Byobu command response"
+                  register: output
+                  changed_when: output.rc != 0
+                  failed_when: output.rc != 1
+                  ansible.builtin.command: "byobu"
 
-            - name: "Check Neofetch install and configuration for all users"
-              loop: "{{ home_directories.stdout_lines }}"
-              loop_control:
-                loop_var: "user"
-              when: user != 'lost+found'
-              become: yes
-              become_user: "{{ user }}"
-              register: file_check
-              failed_when: not file_check.stat.exists
-              ansible.builtin.stat:
-                path: "/home/{{ user }}/.config/neofetch/config.conf"
+                - name: "Check Byobu install and configuration for root"
+                  register: file_check
+                  failed_when: not file_check.stat.exists
+                  ansible.builtin.stat:
+                    path: "/root/.byobu/backend"
 
-    - name: "Check Byobu installs"
-      block:
-        - name: "Check Byobu for root"
-          block:
-            - name: "Check Byobu command response"
-              register: output
-              changed_when: output.rc != 0
-              failed_when: output.rc != 1
-              ansible.builtin.command: "byobu"
+            - name: "Check Byobu for all users"
+              when: inv_install_byobu_enable_byobu_for_all and home_directories
+              block:
+                - name: "Get Byobu command response for all users"
+                  loop: "{{ home_directories.stdout_lines }}"
+                  loop_control:
+                    loop_var: "user"
+                  when: user != 'lost+found'
+                  become: yes
+                  become_user: "{{ user }}"
+                  register: output
+                  changed_when: output.rc != 0
+                  failed_when: output.rc != 1
+                  ansible.builtin.command: "byobu"
 
-            - name: "Check Byobu install and configuration for root"
-              register: file_check
-              failed_when: not file_check.stat.exists
-              ansible.builtin.stat:
-                path: "/root/.byobu/backend"
-
-        - name: "Check Byobu for all users"
-          when: inv_install_byobu_enable_byobu_for_all and home_directories
-          block:
-            - name: "Get Byobu command response for all users"
-              loop: "{{ home_directories.stdout_lines }}"
-              loop_control:
-                loop_var: "user"
-              when: user != 'lost+found'
-              become: yes
-              become_user: "{{ user }}"
-              register: output
-              changed_when: output.rc != 0
-              failed_when: output.rc != 1
-              ansible.builtin.command: "byobu"
-
-            - name: "Get Byobu install and configuration for all users"
-              loop: "{{ home_directories.stdout_lines }}"
-              loop_control:
-                loop_var: "user"
-              when: user != 'lost+found'
-              become: yes
-              become_user: "{{ user }}"
-              register: file_check
-              failed_when: not file_check.stat.exists
-              ansible.builtin.stat:
-                path: "/home/{{ user }}/.byobu/backend"
+                - name: "Get Byobu install and configuration for all users"
+                  loop: "{{ home_directories.stdout_lines }}"
+                  loop_control:
+                    loop_var: "user"
+                  when: user != 'lost+found'
+                  become: yes
+                  become_user: "{{ user }}"
+                  register: file_check
+                  failed_when: not file_check.stat.exists
+                  ansible.builtin.stat:
+                    path: "/home/{{ user }}/.byobu/backend"
 
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
@@ -146,32 +152,35 @@
   gather_facts: false
   tasks:
 
-    - name: "Check Lynis path installation"
-      register: lynis_folder
-      failed_when: not lynis_folder.stat.exists
-      ansible.builtin.stat:
-        path: "{{ inv_lynis_install_path }}"
-
-    #- name: "Create a local Lynis report and check status code"
-    #  register: lynis_create_report_status
-    #  failed_when: lynis_create_report_status.rc != 0
-    #  changed_when: lynis_create_report_status.rc != 0
-    #  ansible.builtin.shell: "set -o pipefail | lynis audit system --quick --pentest 2>&1"
-
-    - name: "Verify cron and email behaviors"
-      when: inv_lynis_create_cron_job
+    - name: "Verify LYNIS"
+      when: inv_install_lynis | default(false)
       block:
-      - name: "Check if a cron file exist"
-        register: cron_file
-        failed_when: not cron_file.stat.exists
-        ansible.builtin.stat:
-          path: "/etc/cron.d/ansible_lynis_send_reports"
+        - name: "Check Lynis path installation"
+          register: lynis_folder
+          failed_when: not lynis_folder.stat.exists
+          ansible.builtin.stat:
+            path: "{{ inv_lynis_install_path }}"
 
-      #- name: "Create a custom email Lynis report and check status code"
-      #  register: lynis_create_report_status
-      #  failed_when: lynis_create_report_status.rc != 0
-      #  changed_when: lynis_create_report_status.rc != 0
-      #  ansible.builtin.shell: "set -o pipefail | lynis audit system --quick --pentest 2>&1  | ansi2html | mail -a 'MIME-Version: 1.0' -a 'Content-Type: text/html; charset=iso-8859-1' -s \"Lynis reports of $(hostname -f)\" {{ inv_lynis_report_email_address }}"
+        #- name: "Create a local Lynis report and check status code"
+        #  register: lynis_create_report_status
+        #  failed_when: lynis_create_report_status.rc != 0
+        #  changed_when: lynis_create_report_status.rc != 0
+        #  ansible.builtin.shell: "set -o pipefail | lynis audit system --quick --pentest 2>&1"
+
+        - name: "Verify cron and email behaviors"
+          when: inv_lynis_create_cron_job
+          block:
+          - name: "Check if a cron file exist"
+            register: cron_file
+            failed_when: not cron_file.stat.exists
+            ansible.builtin.stat:
+              path: "/etc/cron.d/ansible_lynis_send_reports"
+
+          #- name: "Create a custom email Lynis report and check status code"
+          #  register: lynis_create_report_status
+          #  failed_when: lynis_create_report_status.rc != 0
+          #  changed_when: lynis_create_report_status.rc != 0
+          #  ansible.builtin.shell: "set -o pipefail | lynis audit system --quick --pentest 2>&1  | ansi2html | mail -a 'MIME-Version: 1.0' -a 'Content-Type: text/html; charset=iso-8859-1' -s \"Lynis reports of $(hostname -f)\" {{ inv_lynis_report_email_address }}"
 
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
@@ -180,23 +189,26 @@
   gather_facts: false
   tasks:
 
-    - name: "Get Portsentry service current state"
-      register: portsentry_service_status
-      failed_when: not portsentry_service_status.status.ActiveState == 'active'
-      ansible.builtin.systemd:
-        name: "portsentry"
+    - name: "Verify PORTSENTRY"
+      when: inv_install_portsentry | default(false)
+      block:
+        - name: "Get Portsentry service current state"
+          register: portsentry_service_status
+          failed_when: not portsentry_service_status.status.ActiveState == 'active'
+          ansible.builtin.systemd:
+            name: "portsentry"
 
-    - name: "Check Portsentry files"
-      loop:
-        - "/etc/portsentry/portsentry.conf"
-        - "/etc/default/portsentry"
-        - "/etc/portsentry/portsentry.ignore.static"
-      loop_control:
-        loop_var: files_path
-      register: file_check
-      failed_when: not file_check.stat.exists
-      ansible.builtin.stat:
-        path: "{{ files_path }}"
+        - name: "Check Portsentry files"
+          loop:
+            - "/etc/portsentry/portsentry.conf"
+            - "/etc/default/portsentry"
+            - "/etc/portsentry/portsentry.ignore.static"
+          loop_control:
+            loop_var: files_path
+          register: file_check
+          failed_when: not file_check.stat.exists
+          ansible.builtin.stat:
+            path: "{{ files_path }}"
 
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
@@ -205,37 +217,40 @@
   gather_facts: false
   tasks:
 
-    - name: "Get Postfix service current state"
-      register: postfix_service_status
-      failed_when: not postfix_service_status.status.ActiveState == 'active'
-      ansible.builtin.systemd:
-        name: "postfix"
+    - name: "Verify POSTFIX"
+      when: inv_install_postfix | default(false)
+      block:
+        - name: "Get Postfix service current state"
+          register: postfix_service_status
+          failed_when: not postfix_service_status.status.ActiveState == 'active'
+          ansible.builtin.systemd:
+            name: "postfix"
 
-    - name: "Check Postfix files"
-      loop:
-        - "/etc/mailname"
-        - "/etc/postfix/main.cf"
-        - "/etc/postfix/aliases.cf"
-      loop_control:
-        loop_var: files_path
-      register: file_check
-      failed_when: not file_check.stat.exists
-      ansible.builtin.stat:
-        path: "{{ files_path }}"
+        - name: "Check Postfix files"
+          loop:
+            - "/etc/mailname"
+            - "/etc/postfix/main.cf"
+            - "/etc/postfix/aliases.cf"
+          loop_control:
+            loop_var: files_path
+          register: file_check
+          failed_when: not file_check.stat.exists
+          ansible.builtin.stat:
+            path: "{{ files_path }}"
 
-    - name: "Check Postfix relay email sender file"
-      when: inv_postfix_email_sender
-      register: file_check
-      failed_when: not file_check.stat.exists
-      ansible.builtin.stat:
-        path: "/etc/postfix/sasl_client"
+        - name: "Check Postfix relay email sender file"
+          when: inv_postfix_email_sender
+          register: file_check
+          failed_when: not file_check.stat.exists
+          ansible.builtin.stat:
+            path: "/etc/postfix/sasl_client"
 
-    - name: "Check Postfix configuration"
-      register: output
-      changed_when: output.rc != 0
-      ansible.builtin.command:
-        cmd: "postfix check"
-        chdir: "/"
+        - name: "Check Postfix configuration"
+          register: output
+          changed_when: output.rc != 0
+          ansible.builtin.command:
+            cmd: "postfix check"
+            chdir: "/"
 
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
@@ -244,32 +259,35 @@
   gather_facts: false
   tasks:
 
-    - name: "Check if Rkhunter configuration file exist"
-      register: rkhunter_conf_file
-      failed_when: not rkhunter_conf_file.stat.exists
-      ansible.builtin.stat:
-        path: "/etc/rkhunter.conf"
-
-    #- name: "Create a local Rkhunter report and check status code"
-    #  register: rkhunter_create_report_status
-    #  failed_when: rkhunter_create_report_status.rc != 2 # Because emails are not correctly sended
-    #  changed_when: rkhunter_create_report_status.rc != 2 # Because emails are not correctly sended
-    #  ansible.builtin.shell: "set -o pipefail; rkhunter --update && rkhunter --propupd 2>&1 && rkhunter --checkall --skip-keypress 2>&1"
-
-    - name: "Verify cron and email behaviors"
-      when: inv_rkhunter_create_cron_job
+    - name: "Verify RKHUNTER"
+      when: inv_install_rkhunter | default(false)
       block:
-      - name: "Check if a cron file exist"
-        register: cron_file
-        failed_when: not cron_file.stat.exists
-        ansible.builtin.stat:
-          path: "/etc/cron.d/ansible_rkhunter_send_reports"
+        - name: "Check if Rkhunter configuration file exist"
+          register: rkhunter_conf_file
+          failed_when: not rkhunter_conf_file.stat.exists
+          ansible.builtin.stat:
+            path: "/etc/rkhunter.conf"
 
-      #- name: "Create a custom email Rkhunter report and check status code"
-      #  register: rkhunter_create_report_status
-      #  failed_when: rkhunter_create_report_status.rc != 2 # Because emails are not correctly sended
-      #  changed_when: rkhunter_create_report_status.rc != 2 # Because emails are not correctly sended
-      #  ansible.builtin.shell: "set -o pipefail; rkhunter --update && rkhunter --propupd 2>&1 && rkhunter --checkall --skip-keypress 2>&1 | ansi2html | mail -a 'MIME-Version: 1.0' -a 'Content-Type: text/html; charset=iso-8859-1' -s \"Rkhunter reports of $(hostname -f)\" {{ inv_rkhunter_report_email_address }}"
+        #- name: "Create a local Rkhunter report and check status code"
+        #  register: rkhunter_create_report_status
+        #  failed_when: rkhunter_create_report_status.rc != 2 # Because emails are not correctly sended
+        #  changed_when: rkhunter_create_report_status.rc != 2 # Because emails are not correctly sended
+        #  ansible.builtin.shell: "set -o pipefail; rkhunter --update && rkhunter --propupd 2>&1 && rkhunter --checkall --skip-keypress 2>&1"
+
+        - name: "Verify cron and email behaviors"
+          when: inv_rkhunter_create_cron_job
+          block:
+          - name: "Check if a cron file exist"
+            register: cron_file
+            failed_when: not cron_file.stat.exists
+            ansible.builtin.stat:
+              path: "/etc/cron.d/ansible_rkhunter_send_reports"
+
+          #- name: "Create a custom email Rkhunter report and check status code"
+          #  register: rkhunter_create_report_status
+          #  failed_when: rkhunter_create_report_status.rc != 2 # Because emails are not correctly sended
+          #  changed_when: rkhunter_create_report_status.rc != 2 # Because emails are not correctly sended
+          #  ansible.builtin.shell: "set -o pipefail; rkhunter --update && rkhunter --propupd 2>&1 && rkhunter --checkall --skip-keypress 2>&1 | ansi2html | mail -a 'MIME-Version: 1.0' -a 'Content-Type: text/html; charset=iso-8859-1' -s \"Rkhunter reports of $(hostname -f)\" {{ inv_rkhunter_report_email_address }}"
 
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
@@ -278,29 +296,32 @@
   gather_facts: false
   tasks:
 
-    - name: "Get SSH service current state"
-      register: ssh_service_status
-      failed_when: not ssh_service_status.status.ActiveState == 'active'
-      ansible.builtin.systemd:
-        name: "sshd"
+    - name: "Verify SSH"
+      when: inv_install_ssh| default(false)
+      block:
+        - name: "Get SSH service current state"
+          register: ssh_service_status
+          failed_when: not ssh_service_status.status.ActiveState == 'active'
+          ansible.builtin.systemd:
+            name: "sshd"
 
-    - name: "Check SSH connectivity"
-      ansible.builtin.wait_for:
-        host: "{{ inventory_hostname }}"
-        port: "{{ inv_ssh_port }}"
-        timeout: 120
+        - name: "Check SSH connectivity"
+          ansible.builtin.wait_for:
+            host: "{{ inventory_hostname }}"
+            port: "{{ inv_ssh_port }}"
+            timeout: 120
 
-    - name: "Check SSH banners and conf"
-      loop:
-        - "/etc/issue"
-        - "/etc/issue.net"
-        - "/etc/ssh/sshd_config"
-      loop_control:
-        loop_var: banner_path
-      register: file_check
-      failed_when: not file_check.stat.exists
-      ansible.builtin.stat:
-        path: "{{ banner_path }}"
+        - name: "Check SSH banners and conf"
+          loop:
+            - "/etc/issue"
+            - "/etc/issue.net"
+            - "/etc/ssh/sshd_config"
+          loop_control:
+            loop_var: banner_path
+          register: file_check
+          failed_when: not file_check.stat.exists
+          ansible.builtin.stat:
+            path: "{{ banner_path }}"
 
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
@@ -309,16 +330,19 @@
   gather_facts: false
   tasks:
 
-    - name: "Check Unattended-Upgrades files"
-      loop:
-        - "/etc/apt/apt.conf.d/50unattended-upgrades"
-        - "/etc/apt/apt.conf.d/20auto-upgrades"
-      loop_control:
-        loop_var: file_path
-      register: file_check
-      failed_when: not file_check.stat.exists
-      ansible.builtin.stat:
-        path: "{{ file_path }}"
+    - name: "Verify UNATTENDED_UPGRADES"
+      when: inv_unattended_upgrades | default(false)
+      block:
+        - name: "Check Unattended-Upgrades files"
+          loop:
+            - "/etc/apt/apt.conf.d/50unattended-upgrades"
+            - "/etc/apt/apt.conf.d/20auto-upgrades"
+          loop_control:
+            loop_var: file_path
+          register: file_check
+          failed_when: not file_check.stat.exists
+          ansible.builtin.stat:
+            path: "{{ file_path }}"
 
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
@@ -327,30 +351,33 @@
   gather_facts: false
   tasks:
 
-    - name: "Check if Logwatch cache exist"
-      register: logwatch_cache
-      failed_when: not logwatch_cache.stat.exists
-      ansible.builtin.stat:
-        path: "/var/cache/logwatch"
+    - name: "Verify LOGWATCH"
+      when: inv_install_logwatch | default(false)
+      block:
+        - name: "Check if Logwatch cache exist"
+          register: logwatch_cache
+          failed_when: not logwatch_cache.stat.exists
+          ansible.builtin.stat:
+            path: "/var/cache/logwatch"
 
-    - name: "Check if Logwatch configuration exist"
-      register: logwatch_configuration
-      failed_when: not logwatch_configuration.stat.exists
-      ansible.builtin.stat:
-        path: "/etc/logwatch/conf/logwatch.conf"
+        - name: "Check if Logwatch configuration exist"
+          register: logwatch_configuration
+          failed_when: not logwatch_configuration.stat.exists
+          ansible.builtin.stat:
+            path: "/etc/logwatch/conf/logwatch.conf"
 
-    - name: "Check if a cron file exist"
-      when: inv_logwatch_create_cron_job
-      register: cron_file
-      failed_when: not cron_file.stat.exists
-      ansible.builtin.stat:
-        path: "/etc/cron.d/ansible_logwtach_send_reports"
+        - name: "Check if a cron file exist"
+          when: inv_logwatch_create_cron_job
+          register: cron_file
+          failed_when: not cron_file.stat.exists
+          ansible.builtin.stat:
+            path: "/etc/cron.d/ansible_logwtach_send_reports"
 
-    #- name: "Create a Logwtach report and check status code"
-    #  register: logwtach_create_report_status
-    #  failed_when: logwtach_create_report_status.rc != 0
-    #  changed_when: logwtach_create_report_status.rc != 0
-    #  ansible.builtin.command: "logwatch --output {{ inv_logwatch_output_format }}"
+        #- name: "Create a Logwtach report and check status code"
+        #  register: logwtach_create_report_status
+        #  failed_when: logwtach_create_report_status.rc != 0
+        #  changed_when: logwtach_create_report_status.rc != 0
+        #  ansible.builtin.command: "logwatch --output {{ inv_logwatch_output_format }}"
 
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
@@ -359,68 +386,71 @@
   gather_facts: false
   tasks:
 
-    - name: "Get Node_Exporter service current state"
-      register: inv_install_node_exporter_service_status
-      failed_when: not inv_install_node_exporter_service_status.status.ActiveState == 'active'
-      ansible.builtin.systemd:
-        name: "node_exporter"
-
-    - name: "Check endpoint on HTTP"
-      when: not (inv_install_node_exporter_ssl | default(false))
+    - name: "Verify NODE_EXPORTER"
+      when: inv_install_node_exporter | default(false)
       block:
-        - name: "Check Node_Exporter web UI HTTPS / no Auth"
-          when: not (inv_install_node_exporter_basic_auth | default(false))
-          register: node_exporter_infos
-          failed_when: node_exporter_infos.status != 200
-          changed_when: node_exporter_infos.status != 200
-          ansible.builtin.uri:
-            url: "http://{{ inventory_hostname }}:{{ inv_install_node_exporter_port }}"
-            method: GET
-            headers:
-              Content-Type: "application/json"
+        - name: "Get Node_Exporter service current state"
+          register: inv_install_node_exporter_service_status
+          failed_when: not inv_install_node_exporter_service_status.status.ActiveState == 'active'
+          ansible.builtin.systemd:
+            name: "node_exporter"
 
-        - name: "Check Node_Exporter web UI HTTPS / Auth"
-          when: inv_install_node_exporter_basic_auth | default(false)
-          register: node_exporter_infos
-          failed_when: node_exporter_infos.status != 200
-          changed_when: node_exporter_infos.status != 200
-          ansible.builtin.uri:
-            url: "http://{{ inventory_hostname }}:{{ inv_install_node_exporter_port }}"
-            method: GET
-            user: "{{ inv_install_node_exporter_basic_auth_login }}"
-            password: "{{ inv_install_node_exporter_basic_auth_password }}"
-            headers:
-              Content-Type: "application/json"
-            #client_cert: "{{ inv_inv_install_elasticsearch_ssl_crt }}"
-            #client_key: "{{ inv_inv_install_elasticsearch_ssl_key }}"
-            force_basic_auth: yes
+        - name: "Check endpoint on HTTP"
+          when: not (inv_install_node_exporter_ssl | default(false))
+          block:
+            - name: "Check Node_Exporter web UI HTTPS / no Auth"
+              when: not (inv_install_node_exporter_basic_auth | default(false))
+              register: node_exporter_infos
+              failed_when: node_exporter_infos.status != 200
+              changed_when: node_exporter_infos.status != 200
+              ansible.builtin.uri:
+                url: "http://{{ inventory_hostname }}:{{ inv_install_node_exporter_port }}"
+                method: GET
+                headers:
+                  Content-Type: "application/json"
 
-    - name: "Check endpoint on HTTPS"
-      when: inv_install_node_exporter_ssl | default(false)
-      block:
-        - name: "Check Node_Exporter web UI HTTPS / no Auth"
-          when: not (inv_install_node_exporter_basic_auth | default(false))
-          register: node_exporter_infos
-          failed_when: node_exporter_infos.status != 200
-          changed_when: node_exporter_infos.status != 200
-          ansible.builtin.uri:
-            url: "https://{{ inventory_hostname }}:{{ inv_install_node_exporter_port }}"
-            method: GET
-            headers:
-              Content-Type: "application/json"
+            - name: "Check Node_Exporter web UI HTTPS / Auth"
+              when: inv_install_node_exporter_basic_auth | default(false)
+              register: node_exporter_infos
+              failed_when: node_exporter_infos.status != 200
+              changed_when: node_exporter_infos.status != 200
+              ansible.builtin.uri:
+                url: "http://{{ inventory_hostname }}:{{ inv_install_node_exporter_port }}"
+                method: GET
+                user: "{{ inv_install_node_exporter_basic_auth_login }}"
+                password: "{{ inv_install_node_exporter_basic_auth_password }}"
+                headers:
+                  Content-Type: "application/json"
+                #client_cert: "{{ inv_inv_install_elasticsearch_ssl_crt }}"
+                #client_key: "{{ inv_inv_install_elasticsearch_ssl_key }}"
+                force_basic_auth: yes
 
-        - name: "Check Node_Exporter web UI HTTPS / Auth"
-          when: inv_install_node_exporter_basic_auth | default(false)
-          register: node_exporter_infos
-          failed_when: node_exporter_infos.status != 200
-          changed_when: node_exporter_infos.status != 200
-          ansible.builtin.uri:
-            url: "https://{{ inventory_hostname }}:{{ inv_install_node_exporter_port }}"
-            method: GET
-            user: "{{ inv_install_node_exporter_basic_auth_login }}"
-            password: "{{ inv_install_node_exporter_basic_auth_password }}"
-            headers:
-              Content-Type: "application/json"
-            #client_cert: "{{ inv_inv_install_elasticsearch_ssl_crt }}"
-            #client_key: "{{ inv_inv_install_elasticsearch_ssl_key }}"
-            force_basic_auth: yes
+        - name: "Check endpoint on HTTPS"
+          when: inv_install_node_exporter_ssl | default(false)
+          block:
+            - name: "Check Node_Exporter web UI HTTPS / no Auth"
+              when: not (inv_install_node_exporter_basic_auth | default(false))
+              register: node_exporter_infos
+              failed_when: node_exporter_infos.status != 200
+              changed_when: node_exporter_infos.status != 200
+              ansible.builtin.uri:
+                url: "https://{{ inventory_hostname }}:{{ inv_install_node_exporter_port }}"
+                method: GET
+                headers:
+                  Content-Type: "application/json"
+
+            - name: "Check Node_Exporter web UI HTTPS / Auth"
+              when: inv_install_node_exporter_basic_auth | default(false)
+              register: node_exporter_infos
+              failed_when: node_exporter_infos.status != 200
+              changed_when: node_exporter_infos.status != 200
+              ansible.builtin.uri:
+                url: "https://{{ inventory_hostname }}:{{ inv_install_node_exporter_port }}"
+                method: GET
+                user: "{{ inv_install_node_exporter_basic_auth_login }}"
+                password: "{{ inv_install_node_exporter_basic_auth_password }}"
+                headers:
+                  Content-Type: "application/json"
+                #client_cert: "{{ inv_inv_install_elasticsearch_ssl_crt }}"
+                #client_key: "{{ inv_inv_install_elasticsearch_ssl_key }}"
+                force_basic_auth: yes
