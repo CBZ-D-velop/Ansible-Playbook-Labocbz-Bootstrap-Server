@@ -2,4 +2,6 @@
 - name: "Include tool.bootstrap_server playbook"
   tags:
       - "tool.bootstrap_server"
+  vars:
+    tower_env: "local"
   ansible.builtin.import_playbook: "../../playbook.yml"
