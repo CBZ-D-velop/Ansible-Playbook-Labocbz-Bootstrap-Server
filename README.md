@@ -140,7 +140,7 @@ Here you can put your change to keep a trace of your work and decisions.
 * Removed RSYSLOG
 * Will add Filebeat
 * New CI
-* Idempotency
+* Idempotency added
 
 ## Authors
 
