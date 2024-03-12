@@ -1,27 +1,27 @@
 ---
 # if you have any prepararion task
 - name: "Prepare"
-  hosts: "all"
+  hosts: "cicd-debian-11"
   gather_facts: true
   tasks:
 
-    - name: "Include cryptographic content var file"
-      ansible.builtin.include_vars: "../../tests/certs/main.yml"
+    #- name: "Include cryptographic content var file"
+    #  ansible.builtin.include_vars: "../../tests/certs/main.yml"
 
-    - name: "Include labocbz.prepare_host"
-      tags:
-        - "labocbz.prepare_host"
-      ansible.builtin.include_role:
-        name: "labocbz.prepare_host"
+    #- name: "Include labocbz.prepare_host"
+    #  tags:
+    #    - "labocbz.prepare_host"
+    #  ansible.builtin.include_role:
+    #    name: "labocbz.prepare_host"
 
     - name: "Gather facts from all hosts"
       delegate_to: "{{ item }}"
       delegate_facts: true
-      loop: "{{ groups['all'] }}"
+      loop: "{{ groups['cicd-debian-11'] }}"
       ansible.builtin.setup:
 
     - name: "Edit /etc/hosts file to add all hosts"
-      loop: "{{ groups['all'] }}"
+      loop: "{{ groups['cicd-debian-11'] }}"
       loop_control:
         loop_var: host
       register: output
@@ -53,10 +53,10 @@
         mode: 0700
 
     - name: "Import cryptographic content if needed (cert)"
-      loop: "{{ inv_install_node_exporter_certs }}"
+      loop: "{{ inv_install_node_exporter__certs }}"
       loop_control:
         loop_var: bundle
-      when: inv_install_node_exporter_certs is defined and bundle.type == "cert"
+      when: inv_install_node_exporter__certs is defined and bundle.type == "cert"
       ansible.builtin.copy:
         src: "../../tests/certs/{{ bundle.name }}.zip"
         dest: "/tmp/{{ bundle.name }}.zip"
@@ -66,10 +66,10 @@
 
     - name: "Import cryptographic content if needed (CA)"
       run_once: yes
-      loop: "{{ inv_install_node_exporter_certs }}"
+      loop: "{{ inv_install_node_exporter__certs }}"
       loop_control:
         loop_var: bundle
-      when: inv_install_node_exporter_certs is defined and bundle.type == "CA"
+      when: inv_install_node_exporter__certs is defined and bundle.type == "CA"
       ansible.builtin.copy:
         src: "../../tests/certs/{{ bundle.name }}"
         dest: "/tmp/{{ bundle.name }}"

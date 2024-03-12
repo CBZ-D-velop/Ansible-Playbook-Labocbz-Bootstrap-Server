@@ -21,7 +21,6 @@
 ![Tag: Lynis](https://img.shields.io/badge/Tech-Lynis-orange)
 ![Tag: Portsentry](https://img.shields.io/badge/Tech-Portsentry-orange)
 ![Tag: Postfix](https://img.shields.io/badge/Tech-Postfix-orange)
-![Tag: Rsyslog](https://img.shields.io/badge/Tech-Rsyslog-orange)
 ![Tag: Unattended-Upgrades](https://img.shields.io/badge/Tech-Unattended--Upgrades-orange)
 ![Tag: Logrotate](https://img.shields.io/badge/Tech-Logrotate-orange)
 ![Tag: Rkhunter](https://img.shields.io/badge/Tech-Rkhunter-orange)
@@ -32,7 +31,7 @@ An Ansible playbook to bootstrap and configure a server based on Debian/Ubuntu.
 
 This Ansible playbook is an essential tool for automating and industrializing the deployment of servers and virtual machines. It relies on roles defined elsewhere in the documentation to simplify the process of bootstrapping, installing, configuring, and deploying a set of tools.
 
-The approach of this playbook is based on organizing servers into groups, where each server must belong to one or more groups to be considered a target for tool installation and configuration. For example, by using the expression {{ tower_env | default([]) }}:&LOGWATCH, all servers that are part of the tower_env group and also present in the LOGWATCH group will automatically be equipped with the Logwatch tool, with consistent installation and configuration.
+The approach of this playbook is based on organizing servers into groups, where each server must belong to one or more groups to be considered a target for tool installation and configuration. For example, by using the expression {{ tower_env | default([]) }}, all servers that are part of the tower_env group and also present in the LOGWATCH group will automatically be equipped with the Logwatch tool, with consistent installation and configuration.
 
 The primary goal of this playbook is to streamline and accelerate the setup of servers and virtual machines, ensuring uniformity in configuration and automating many tasks. This approach saves valuable time and reduces human errors when deploying complex IT infrastructures.
 
@@ -103,7 +102,7 @@ To install this playbook, just copy/import this playbook or raw file into your f
 ```YAML
 # From AWX / Tower
 ---
-tower_env: "local"
+
 ```
 
 ## Architectural Decisions Records
@@ -134,6 +133,15 @@ Here you can put your change to keep a trace of your work and decisions.
 * You can select your custom install with Boolean based vars
 * All var in one single inventory
 
+### 2023-03-07: Refaco and CI
+
+* New CI
+* New roles
+* Removed RSYSLOG
+* Will add Filebeat
+* New CI
+* Idempotency added
+
 ## Authors
 
 * Lord Robin Crombez
@@ -150,7 +158,6 @@ Here you can put your change to keep a trace of your work and decisions.
 * [labocbz.install_lynis](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Lynis.git)
 * [labocbz.install_portsentry](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Portsentry.git)
 * [labocbz.install_postfix](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Postfix.git)
-* [labocbz.install_rsyslog](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Rsyslog.git)
 * [labocbz.install_ssh](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-SSH.git)
 * [labocbz.install_unattended_upgrades](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-UnattendedUpgrades.git)
 * [labocbz.add_logrotate_confs](https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Add-Logrotate-Confs.git)
