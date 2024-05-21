@@ -58,9 +58,10 @@ variables:
   rules:
     - if: '$CI_COMMIT_MESSAGE=~/^[^Merge]/ && $CI_COMMIT_BRANCH == "develop"'
   needs:
-    - "yaml_lint"
-    #- "jinja_lint"
-    - "ansible_lint"
+    - "lint:yaml"
+    #- "lint:jinja"
+    - "lint:ansible"
+    - "lint:markdown"
 
 ###############################################################################
 #################### CICD
