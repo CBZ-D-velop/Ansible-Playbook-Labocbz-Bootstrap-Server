@@ -1,3 +1,2 @@
 ---
-tower_temp: true
-#tower_env: "local"
+tower_env: "local"
