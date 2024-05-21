@@ -9,7 +9,7 @@ driver:
 
 platforms:
   - name: "molecule-cicd-debian-11-instance-1-bootstrap-server"
-    image: "${NEXUS_DOCKER_GROUP_REGISTRY}/${DOCKER_IMAGE__ANSIBLETEST_DEBIAN_11}"
+    image: "${NEXUS_REPOS_DOCKER_REGISTRY}/${DOCKER_IMAGE__ANSIBLETEST_DEBIAN_11}"
     hostname: "molecule-cicd-debian-11-instance-1-bootstrap-server"
     privileged: true
     pre_build_image: true
