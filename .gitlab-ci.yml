@@ -40,8 +40,8 @@ variables:
 ###############################################################################
 
 .molecule_test: &molecule_test
-  image: $NEXUS_REPOS_DOCKER_REGISTRY/$DOCKER_IMAGE_DOCKER_DIND_MOLECULE
-  stage: test
+  image: $NEXUS_REPOS_DOCKER_REGISTRY/$DOCKER_IMAGE__RUN_ANSIBLE_MOLECULE
+  stage: molecule
   before_script:
     - "export DOCKER_CLIENT_TIMEOUT=180"
     - "export COMPOSE_HTTP_TIMEOUT=180"
