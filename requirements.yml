@@ -39,4 +39,4 @@
   src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Rkhunter.git"
 
 - name: "labocbz.install_logwatch"
-  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Logwtach.git"
+  src: "https://github.com/CBZ-D-velop/Ansible-Role-Labocbz-Install-Logwatch.git"
