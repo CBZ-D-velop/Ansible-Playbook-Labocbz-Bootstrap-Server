@@ -10,7 +10,7 @@
       tags:
         - "labocbz.prepare_host"
       vars:
-        prepare_host__users: "{{ inv_prepare_host__users | default([])}}"
+        prepare_host__users: "{{ inv_prepare_host__users | default([]) }}"
         prepare_host__system_users: "{{ inv_prepare_host__system_users | default([]) }}"
         prepare_host__timezone: "{{ inv_prepare_host__timezone }}"
       ansible.builtin.include_role:
