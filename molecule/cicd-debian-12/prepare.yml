@@ -5,14 +5,14 @@
   gather_facts: true
   tasks:
 
-    #- name: "Include cryptographic content var file"
-    #  ansible.builtin.include_vars: "../../tests/certs/main.yml"
+    - name: "Include cryptographic content var file"
+      ansible.builtin.include_vars: "../../tests/certs/main.yml"
 
-    #- name: "Include labocbz.prepare_host"
-    #  tags:
-    #    - "labocbz.prepare_host"
-    #  ansible.builtin.include_role:
-    #    name: "labocbz.prepare_host"
+    - name: "Include labocbz.prepare_host"
+      tags:
+        - "labocbz.prepare_host"
+      ansible.builtin.include_role:
+        name: "labocbz.prepare_host"
 
     - name: "Gather facts from all hosts"
       delegate_to: "{{ item }}"
@@ -38,7 +38,7 @@
         dest: "/tmp/{{ bundle.name }}.zip"
         owner: "root"
         group: "root"
-        mode: 0700
+        mode: "0700"
 
     - name: "Import cryptographic content if needed (CA)"
       loop: "{{ inv_ca_cert_bundles }}"
@@ -50,7 +50,7 @@
         dest: "/tmp/{{ bundle.name }}"
         owner: "root"
         group: "root"
-        mode: 0700
+        mode: "0700"
 
     - name: "Import cryptographic content if needed (cert)"
       loop: "{{ inv_install_node_exporter__certs }}"
@@ -62,7 +62,7 @@
         dest: "/tmp/{{ bundle.name }}.zip"
         owner: "root"
         group: "root"
-        mode: 0700
+        mode: "0700"
 
     - name: "Import cryptographic content if needed (CA)"
       run_once: yes
@@ -75,4 +75,4 @@
         dest: "/tmp/{{ bundle.name }}"
         owner: "root"
         group: "root"
-        mode: 0700
+        mode: "0700"

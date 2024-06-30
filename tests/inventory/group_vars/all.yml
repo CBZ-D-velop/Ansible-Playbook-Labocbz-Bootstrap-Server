@@ -15,6 +15,8 @@ inv_prepare_host__users:
     sudoer: true
     password: "secretpassword"
 
+inv_prepare_host__timezone: "Eurpose/Paris"
+
 inv_prepare_host__system_users:
   - login: "testuser2"
     group: "testuser2"
